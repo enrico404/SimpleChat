@@ -1,8 +1,7 @@
-from SimpleChat.Server import Server
-from threading import  Thread
-#parte grafica
+
+from MyServer import Server
+
 ser = Server()
-
-
 ser.server_running()
+
 

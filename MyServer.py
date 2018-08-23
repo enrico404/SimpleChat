@@ -17,6 +17,12 @@ class Server(object):
     def handle_client(self, client):
         while True:
             data = client.recv(1024)
+            temp = data.decode()
+            if temp == "q":
+                client.close()
+                self.clients.remove(client)
+                break
+
             if self.clients[0] == client:
                 self.clients[1].send(data)
             else:
