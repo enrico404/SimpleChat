@@ -5,4 +5,4 @@ from threading import Thread
 cl = Client()
 cl.log()
 
-Thread(cl.send_mfigasessage()).start()
+Thread(cl.send_message()).start()
