@@ -1,8 +1,11 @@
-from MyClient import  Client
-from threading import Thread
+from ClientFrame import *
+import sys
+from PyQt5.QtWidgets import QApplication
 # parte grafica
 
-cl = Client()
-cl.log()
 
-Thread(cl.send_message()).start()
+app = QApplication(sys.argv)
+cl_frame = ClientFrame()
+cl_frame.init_window()
+sys.exit(app.exec_())
+
