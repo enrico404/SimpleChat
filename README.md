@@ -7,4 +7,4 @@ Follow these three steps:
 2) open another terminal and launch the first client: python3 ClientRun.py
 3) open another terminal and launch the second client: python3 ClientRun.py
 
-NB: you must have installed python3, python3-pyqt5 for run the application
+NB: you must have installed python3 to run the application
