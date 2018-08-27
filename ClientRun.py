@@ -1,7 +1,7 @@
 from ClientFrame import *
 import sys
 from PyQt5.QtWidgets import QApplication
-# parte grafica
+
 
 
 app = QApplication(sys.argv)

@@ -13,36 +13,36 @@ class Server(QObject):
         self.host = 'localhost'
         self.port = 8080
         self.stream_socket.bind((self.host, self.port))
-        self.welcome_message = "Welcome, write 'q' for exit \n"
+        self.welcome_message = "Welcome!! \n"
         self.stream_socket.listen(5)
         self.clients = []  # lists of all clients connected
 
-    def handle_client(self):
+    def handle_client(self, client):
         while True:
-            data = self.client.recv(1024)
+            data = client.recv(1024)
+            if not data:
+                break
             temp = data.decode()
 
-            print("messaggio ricevuto: "+temp)
-            if temp == "q":
-                self.client.close()
-                self.clients.remove(self.client)
+            print("messagge received: "+temp)
+            if temp == "ABC_EXIT_SIGNAL":
                 break
             for cl in self.clients:
                 cl.send(data)
 
-            #if self.clients[0] == self.client:
-             #   self.clients[1].send(data)
-            #else:
-             #   self.clients[0].send(data)
-
+        # close the client connection from the server side
+        temp ="ABC_EXIT_SIGNAL"
+        client.send(temp.encode()) # send the close message to the client
+        client.close()
+        self.clients.remove(client)
 
 
     def server_running(self):
         while True:
-            self.client, addr = self.stream_socket.accept()
+            client, addr = self.stream_socket.accept()
             print("client accepted")
-            self.client.send(self.welcome_message.encode())
+            client.send(self.welcome_message.encode())
 
-            if self.client not in self.clients:
-                self.clients.append(self.client)
-                Thread(target=self.handle_client).start()
+            if client not in self.clients:
+                self.clients.append(client)
+                Thread(target=self.handle_client, args=(client,)).start()

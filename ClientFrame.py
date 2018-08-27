@@ -57,17 +57,13 @@ class ClientFrame(QWidget):
         self.textview.move(15, 15)
         self.textview.resize(570, 500)
         self.textview.setEnabled(False)
-        self.textview.setText("Inserire il nome utente: ")
+        self.textview.setText("Insert the username please: ")
         self.textview.show()
 
-        self.cl.update.connect(self.textview.append)  # connetto il segnale definito nella classe myclient e appendo il testo alla textview
-
+        self.cl.update.connect(self.textview.append)  # connect the signal to the textview and i append the text to the textview
         self.text_message = QLineEdit(self)
         self.text_message.setGeometry(15, 540, 440, 30)
         self.text_message.show()
-
-
-
 
         self.send = QPushButton("Send", self)
         self.send.setGeometry(483 , 540, 100, 30)
@@ -75,23 +71,25 @@ class ClientFrame(QWidget):
         self.send.show()
 
     def keyPressEvent(self, event):
-        if event.key() == QtCore.Qt.Key_Enter or QtCore.Qt.Key_Return:
+        if event.key() == QtCore.Qt.Key_Return:
             if self.text_message.text() != "":
                 self.sendClick()
 
     def start(self):
-        self.cl.log(self.text_message.text(),self.textview)
+        self.cl.log(self.text_message.text(), self.textview)
         self.log = True
         self.text_message.setText("")
 
 
     def sendClick(self):
         if self.log == False:
-            print("loggo...")
+            print("logging...")
             self.start()
         text = self.text_message.text()
         self.text_message.setText("")
         self.cl.send_message(text)
 
-
+    def closeEvent(self, event):
+        self.cl.send_message("ABC_EXIT_SIGNAL")
+        print("closing connection...")
 

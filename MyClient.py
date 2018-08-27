@@ -9,7 +9,7 @@ from PyQt5.QtCore import QObject
 
 
 class Client(QObject):
-    update = QtCore.pyqtSignal(str) #il segnale va dichiarato a livello di classe
+    update = QtCore.pyqtSignal(str) # the signal must be declared at class level
     def __init__(self):
         super().__init__()
         self.stream_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -29,18 +29,21 @@ class Client(QObject):
 
 
     def send_message(self, msg):
-        msg = self.nome+": "+ msg
-        msg_cod = msg.encode()
-        self.stream_socket.send(msg_cod)
-        if msg == "q":
-            self.stop = True
-
+        if msg != "ABC_EXIT_SIGNAL":
+            msg = self.nome+":  "+ msg
+            msg_cod = msg.encode()
+            self.stream_socket.send(msg_cod)
+        else:
+            self.stream_socket.send(msg.encode())
     def response_control(self):
         while True:
-            if self.stop == True:
-                self.stream_socket.close()
-                return
+
             resp = self.stream_socket.recv(1024) #max 1024 bytes of response
             resp_dec = resp.decode()
 
-            self.update.emit(resp_dec) #emetto il segnale per dire al main thread di aggiorare la view
+            if resp_dec == "ABC_EXIT_SIGNAL":  # if response is q i have to close the connection from the client side
+                break
+            self.update.emit(resp_dec) # emit the signal to update the textview
+
+        self.stream_socket.close()
+        print("connection closed")
